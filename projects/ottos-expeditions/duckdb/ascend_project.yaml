@@ -1,0 +1,21 @@
+project:
+  name: ottos-expeditions
+  pip_packages:
+  - ottos-expeditions
+  parameters:
+    duckdb:
+      automations:
+        duckdb_schedule: R(0-59) */4 * * *
+  defaults:
+  - kind: Flow
+    name:
+      regex: .*
+    spec:
+      data_plane:
+        connection_name: data_plane_duckdb
+  - kind: Flow
+    name:
+      regex: .*-postgres
+    spec:
+      data_plane:
+        connection_name: data_plane_duckdb_postgres

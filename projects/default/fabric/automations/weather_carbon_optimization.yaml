@@ -1,0 +1,15 @@
+automation:
+  enabled: true
+  name: weather_carbon_optimization
+  triggers:
+    sensors:
+      - type: timer
+        name: daily-midnight-utc
+        config:
+          schedule:
+            cron: '0 0 * * *'
+  actions:
+    - type: run_flow
+      name: run-weather-carbon-optimization
+      config:
+        flow: weather_carbon_optimization

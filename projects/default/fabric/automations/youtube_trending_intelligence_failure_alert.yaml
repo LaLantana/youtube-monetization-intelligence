@@ -1,0 +1,27 @@
+automation:
+  enabled: true
+  name: youtube_trending_intelligence_failure_alert
+  triggers:
+    events:
+      - types:
+          - FlowRunFailed
+        sql_filter: json_extract_string(event, '$.data.flow') = 'youtube_trending_intelligence'
+  actions:
+    - type: email_alert
+      name: email-youtube-flow-failure-alert
+      config:
+        emails:
+          - design@mayaospina.com
+        include_otto_summary: true
+        agent_name: Professor Otto
+        prompt: |
+          Review the failed #flow:youtube_trending_intelligence run.
+
+          The alert must include:
+          - failed component name
+          - full error message
+          - stack trace
+          - plain-language diagnosis
+          - specific proposed fix
+
+          Focus on the actual run failure details and explain the likely root cause using the component error context only.

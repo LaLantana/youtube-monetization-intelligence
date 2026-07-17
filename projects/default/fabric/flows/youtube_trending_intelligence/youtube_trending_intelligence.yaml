@@ -1,0 +1,4 @@
+flow:
+  name: youtube_trending_intelligence
+  description: Incrementally ingest, enrich, and analyze YouTube trending intelligence for monetization insights.
+  version: 0.1.0

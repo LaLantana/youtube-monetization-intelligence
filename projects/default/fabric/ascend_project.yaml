@@ -1,0 +1,20 @@
+project:
+  name: ottos-expeditions
+  pip_packages:
+  - ottos-expeditions
+  - pytrends
+  - vaderSentiment
+  parameters:
+    fabric: {}
+  defaults:
+  - kind: Flow
+    name:
+      regex: .*
+    spec:
+      data_plane:
+        connection_name: data_plane_fabric
+  - kind: Flow
+    name: youtube_trending_intelligence
+    spec:
+      data_plane:
+        connection_name: data_plane_motherduck

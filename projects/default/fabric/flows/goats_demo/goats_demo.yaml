@@ -1,0 +1,5 @@
+flow:
+  name: goats_demo
+  description: Demo flow built from the Otto's Expeditions goats.csv dataset.
+  version: 0.1.0
+  data_plane: {}

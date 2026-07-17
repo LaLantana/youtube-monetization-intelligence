@@ -1,0 +1,32 @@
+automation:
+  enabled: true
+  name: youtube_trending_topic_spike_alert
+  triggers:
+    events:
+      - types:
+          - FlowRunSuccess
+        sql_filter: json_extract_string(event, '$.data.flow') = 'youtube_trending_intelligence'
+  actions:
+    - type: email_alert
+      name: email-youtube-topic-spike-alert
+      config:
+        emails:
+          - design@mayaospina.com
+        include_otto_summary: true
+        agent_name: Professor Otto
+        prompt: |
+          Review the successful #flow:youtube_trending_intelligence run.
+
+          Send an alert only if the validated topic cluster output shows that any topic cluster spiked by 30% or more in video count or estimated revenue across 10 or more countries compared to the previous month.
+
+          Use #component:topic_cluster_lifecycle_analysis as the primary validated topic cluster source.
+
+          Confirm the spike using topic cluster month-over-month movement and identify the countries associated with that topic pattern.
+
+          The email must include:
+          - which topic cluster spiked
+          - which countries it spiked in
+          - the percentage change
+          - the estimated revenue impact
+
+          If no topic cluster meets this threshold, do not send an alert.

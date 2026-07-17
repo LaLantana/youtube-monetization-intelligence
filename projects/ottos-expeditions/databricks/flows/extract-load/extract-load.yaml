@@ -1,0 +1,5 @@
+flow:
+  parameters:
+    databricks:
+      schema: EXTRACT_LOAD
+      http_path: ${parameters.databricks.warehouse_http_path}

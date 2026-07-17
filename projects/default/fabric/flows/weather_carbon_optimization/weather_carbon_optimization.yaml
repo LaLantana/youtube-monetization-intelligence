@@ -1,0 +1,4 @@
+flow:
+  name: weather_carbon_optimization
+  description: Optimize operations using weather, carbon intensity, and schedule data.
+  version: 0.1.0

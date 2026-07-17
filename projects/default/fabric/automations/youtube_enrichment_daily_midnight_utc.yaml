@@ -1,0 +1,15 @@
+automation:
+  enabled: true
+  name: youtube_enrichment_daily_midnight_utc
+  triggers:
+    sensors:
+      - type: timer
+        name: daily-midnight-utc-youtube-enrichment
+        config:
+          schedule:
+            cron: '0 0 * * *'
+  actions:
+    - type: run_flow
+      name: run-youtube-enrichment-daily
+      config:
+        flow: youtube_trending_intelligence

@@ -1,0 +1,11 @@
+component:
+  name: read_facilities
+  read:
+    connection: read_local_files
+    local_file:
+      path: read_facilities.csv
+      parser: csv
+  tests:
+    component:
+      - count_equal:
+          count: 5

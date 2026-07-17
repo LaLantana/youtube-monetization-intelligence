@@ -1,0 +1,12 @@
+flow:
+  parameters:
+    databricks:
+      schema: TRANSFORM
+      http_path: ${parameters.databricks.warehouse_http_path}
+  defaults:
+    - kind: Component
+      name:
+        regex: ".*"
+      spec:
+        retry_strategy:
+          stop_after_attempt: 5

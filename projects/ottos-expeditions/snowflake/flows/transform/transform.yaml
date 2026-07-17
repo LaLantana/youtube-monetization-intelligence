@@ -1,0 +1,11 @@
+flow:
+  parameters:
+    snowflake:
+      schema: ${parameters.snowflake.schema}_TRANSFORM
+  defaults:
+    - kind: Component
+      name:
+        regex: ".*"
+      spec:
+        retry_strategy:
+          stop_after_attempt: 5

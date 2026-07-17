@@ -1,0 +1,45 @@
+automation:
+  enabled: true
+  name: weather_carbon_optimization_success_review
+  triggers:
+    events:
+      - types:
+          - FlowRunSuccess
+        sql_filter: json_extract_string(event, '$.data.flow') = 'weather_carbon_optimization'
+  actions:
+    - type: run_otto
+      name: review-carbon-intensity-forecast
+      config:
+        agent_name: Professor Otto
+        prompt: |
+          Review #flow:weather_carbon_optimization after its successful run.
+
+          Analyze the next 7 days of forecasted carbon intensity and identify any schedulable machines currently planned to run during high carbon intensity windows, defined as the top 25% of forecasted hours by predicted_intensity_gco2_per_kwh within each facility.
+
+          Prepare an executive-ready summary that includes:
+          - affected machines
+          - facility name
+          - current scheduled windows
+          - optimal alternative windows
+          - projected savings from rescheduling
+          - a short forecast review narrative
+
+          If no schedulable machines are in those high-carbon windows, state that clearly.
+    - type: email_alert
+      name: email-high-carbon-schedule-alert
+      config:
+        emails:
+          - design@mayaospina.com
+        include_otto_summary: true
+        agent_name: Professor Otto
+        prompt: |
+          Review the successful #flow:weather_carbon_optimization run and send an alert only if any schedulable machine is currently scheduled during a high carbon intensity window, defined as the top 25% of forecasted hours by predicted_intensity_gco2_per_kwh within each facility.
+
+          The email must include:
+          - which machines are affected
+          - which facility they are in
+          - current scheduled windows
+          - optimal alternative windows
+          - projected savings from rescheduling
+
+          If no schedulable machines meet this condition, do not send an alert.

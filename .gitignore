@@ -1,0 +1,22 @@
+# Python
+.ruff_cache/
+.venv/
+dist/
+__pycache__/
+
+# Local AscendLake
+ascendlake/
+
+# JetBrains IDE
+.idea/*
+!.idea/runConfigurations/
+
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+
+# Ascend's own course materials — not ours to republish
+Bootcamp presentations/
+Agentic Data & Analytics Hackathon.docx

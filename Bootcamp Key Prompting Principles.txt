@@ -1,0 +1,49 @@
+﻿List 1:
+1. Plan before building: Force the agent to create a reviewable plan before executing. Catches errors when they're cheap to fix.
+2. Specify exact values and paths: URLs, coordinates, file paths, and business constants should be hardcoded in the prompt, not left to the agent's discretion.
+3. Anti-hallucination guardrails: Instruct agents to inspect real data before building parsers or models. Ground work in observed reality, not documentation summaries.
+4. Iterative build-and-test: Tell the agent to validate each component before building the next. Prevents cascading errors.
+5. Scoped context: Use glob and keyword scoping for rules so the agent gets deep expertise precisely when needed without context window bloat.
+6. Negative constraints: Tell agents what NOT to do (don't mock data, don't use single-letter variables, don't modify existing automation) to close loopholes.
+7. Audience-aware deliverables: Specify who will see the output and what story it should tell.
+8. Safety guardrails: Include human checkpoints ("wait for confirmation"), bounded autonomy (50-action pause), and verification steps.
+9. Knowledge capture loops: Use learning commands to systematically capture what the agent discovers, building a compounding knowledge base.
+10. Process instructions alongside content instructions: Tell agents HOW to work (iteratively, test each component, only re-run what you fixed) not just WHAT to produce.
+List 2:
+- **Specific data source** ("goats.csv" from Otto's Expeditions): Eliminates ambiguity about what data to use. Without this, Otto might guess or ask clarifying questions, slowing the workflow.
+- **Named output** ("goats_demo"): Gives the agent a concrete target for the Flow name, reducing decisions the agent needs to make.
+- **Explicit component list** (file reader, SQL Transform, Python Transform): Specifies the architecture rather than leaving it open-ended. This constrains the agent's design space to exactly what the instructor wants demonstrated.
+- **Iterative instruction** ("Iterate until the Flow run ends to end"): Tells the agent to self-correct rather than stop at the first error — a key pattern for agentic loops.
+- **End-state deliverable** ("create a visualization"): Defines the done condition clearly.
+- **Format instruction** ("Use the standard otto rule YAML frontmatter"): Specifies the expected output format, preventing the agent from inventing its own.
+- **Numbered, specific standards**: Each rule is concrete and testable (not "write good code" but "every function must have a docstring"). Numbered lists help agents produce structured, complete output.
+- **Negative constraints** ("no single-letter variables except loop counters," "never silently swallow exceptions"): Negative examples are powerful — they close loopholes the agent might exploit.
+- **Exact file path** (otto/rules/learning.md): Removes ambiguity about where the file should live and what it should be named. Critical for projects with specific directory structures.
+- **Behavioral specification** ("prompt you to reflect on conversations"): Describes the desired behavior rather than prescribing the exact content — gives the agent creative latitude while constraining the intent.
+- **Framework reference** ("context engineering best practices"): Anchors the output to an established methodology, producing higher-quality results than a vague "make it good."
+
+
+
+
+
+
+
+
+List 3:
+* "Plan first" pattern: Forces the agent to reason through the full problem before writing code. Catches misunderstandings early and gives the agent a reference document to check against during the build, reducing drift.
+* Exact URLs, coordinates, and parameters: Leaves nothing to the agent's imagination for data sourcing. Hardcoded values prevent the agent from inventing or approximating.
+* Anti-hallucination guardrails ("inspect live API responses... use those observed payloads as the source of truth"): Prevents the agent from guessing at response schemas based on documentation. Forces the agent to ground its work in observed reality.
+* Hardcoded business constants (£85/ton, tariff values): Removes the risk of the agent inventing or looking up incorrect values.
+* Boolean filter conditions (total_savings_gbp > 0, schedulable = true): Explicit, testable constraints that are easy to verify in the output.
+* Process instructions ("build iteratively," "only run the component that you are fixing"): Tells the agent HOW to work, not just what to build. Prevents cascading errors and saves time/compute.
+* Direct and bounded. Asks for specific metrics rather than an open-ended data dump.
+* ***NOT FOR BUILD PROMPT*** Drill-Down Questions - These questions demonstrate iterative verification. Each question drills deeper into a specific dimension of the results. Asking for ranked/bounded results ("top 10 worst offenders") prevents data dumps. Asking about edge cases ("machines marked schedulable but kept at current time") catches logic errors that summary statistics would hide.
+* Audience ("operations leaders"): Tells the agent who will see it, shaping the level of detail and language.
+* Content specification (optimal windows, cost savings): Defines what data to include.
+* Scope ("next week of operations"): Bounds the time range.
+* Narrative frame ("impact of switching from static weekly operations to optimized windows"): Tells the agent what story to tell — a before/after comparison, not just raw data. This is stakeholder-aware prompting.
+* States the goal (daily runs), the concern (hardcoded dates), the action (fix and test). The instruction to "run the flow to confirm" adds a verification step that closes the loop.
+* Simple, direct, and complete. When the task is straightforward, a concise prompt outperforms an over-specified one.
+* Explicit non-modification instruction ("don't modify the daily schedule"): Prevents a common agent mistake of overwriting existing automation.
+* Quantified threshold ("top 25% of forecasted hours"): Defines "high carbon intensity" precisely rather than leaving it subjective.
+* Detailed email specification: Lists exactly what data points the email must contain, preventing generic alerts that don't drive action.

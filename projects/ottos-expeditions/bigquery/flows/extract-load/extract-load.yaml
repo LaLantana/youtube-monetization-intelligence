@@ -1,0 +1,5 @@
+flow:
+  parameters:
+    gcp:
+      bigquery:
+        dataset: ${parameters.gcp.bigquery.dataset_prefix}_EXTRACT_LOAD

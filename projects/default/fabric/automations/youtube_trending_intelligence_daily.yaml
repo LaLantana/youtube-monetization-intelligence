@@ -1,0 +1,15 @@
+automation:
+  enabled: true
+  name: youtube_trending_intelligence_daily
+  triggers:
+    sensors:
+      - type: timer
+        name: daily-youtube-trending-intelligence
+        config:
+          schedule:
+            cron: '0 5 * * *'
+  actions:
+    - type: run_flow
+      name: run-youtube-trending-intelligence-daily
+      config:
+        flow: youtube_trending_intelligence

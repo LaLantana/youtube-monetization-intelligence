@@ -1,0 +1,6 @@
+profile:
+  parameters:
+    duckdb:
+      $<: $parameters.duckdb
+      ducklake:
+        $<: $ascend_managed.duckdb_ducklake

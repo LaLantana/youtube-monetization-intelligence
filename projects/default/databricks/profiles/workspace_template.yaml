@@ -1,0 +1,5 @@
+profile:
+  parameters:
+    databricks:
+      $<: $parameters.databricks
+      catalog: ascend_data_plane_prod

@@ -1,0 +1,11 @@
+component:
+  module:
+    module_id: blueprint
+    config:
+      blueprint_path: blueprints/flows/sentiment
+      parameters:
+        input_name: ascenders_metrics
+        random_func: "random()"
+        threshold_promoters: 45
+        threshold_neutral: 30
+        threshold_detractors: 15

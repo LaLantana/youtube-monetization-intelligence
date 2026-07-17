@@ -1,0 +1,13 @@
+[
+	{"youtube_category_name":"Uncategorized","avg_publish_to_trending_lag_hours":151.6273721623665,"snapshot_count":5012515,"lag_speed_group":"slowest","fastest_rank":11,"slowest_rank":1},
+	{"youtube_category_name":"News & Politics","avg_publish_to_trending_lag_hours":36.0,"snapshot_count":10,"lag_speed_group":"fastest","fastest_rank":10,"slowest_rank":2},
+	{"youtube_category_name":"People & Blogs","avg_publish_to_trending_lag_hours":25.714285714285715,"snapshot_count":56,"lag_speed_group":"fastest","fastest_rank":9,"slowest_rank":3},
+	{"youtube_category_name":"Comedy","avg_publish_to_trending_lag_hours":24.0,"snapshot_count":3,"lag_speed_group":"fastest","fastest_rank":7,"slowest_rank":4},
+	{"youtube_category_name":"Travel & Events","avg_publish_to_trending_lag_hours":24.0,"snapshot_count":1,"lag_speed_group":"fastest","fastest_rank":8,"slowest_rank":5},
+	{"youtube_category_name":"Music","avg_publish_to_trending_lag_hours":22.933333333333334,"snapshot_count":90,"lag_speed_group":"fastest","fastest_rank":6,"slowest_rank":6},
+	{"youtube_category_name":"Film & Animation","avg_publish_to_trending_lag_hours":22.62857142857143,"snapshot_count":70,"lag_speed_group":"fastest","fastest_rank":5,"slowest_rank":7},
+	{"youtube_category_name":"Gaming","avg_publish_to_trending_lag_hours":22.508474576271187,"snapshot_count":708,"lag_speed_group":"fastest","fastest_rank":4,"slowest_rank":8},
+	{"youtube_category_name":"Entertainment","avg_publish_to_trending_lag_hours":21.468354430379748,"snapshot_count":237,"lag_speed_group":"fastest","fastest_rank":3,"slowest_rank":9},
+	{"youtube_category_name":"Howto & Style","avg_publish_to_trending_lag_hours":0.0,"snapshot_count":1,"lag_speed_group":"fastest","fastest_rank":1,"slowest_rank":10},
+	{"youtube_category_name":"Sports","avg_publish_to_trending_lag_hours":0.0,"snapshot_count":1,"lag_speed_group":"fastest","fastest_rank":2,"slowest_rank":11}
+]

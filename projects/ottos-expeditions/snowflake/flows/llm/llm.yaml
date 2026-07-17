@@ -1,0 +1,4 @@
+flow:
+  parameters:
+    snowflake:
+      schema: ${parameters.snowflake.schema}_LLM

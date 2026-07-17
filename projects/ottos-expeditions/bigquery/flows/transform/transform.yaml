@@ -1,0 +1,12 @@
+flow:
+  parameters:
+    gcp:
+      bigquery:
+        dataset: ${parameters.gcp.bigquery.dataset_prefix}_TRANSFORM
+  defaults:
+      - kind: Component
+        name:
+          regex: ".*"
+        spec:
+          retry_strategy:
+            stop_after_attempt: 5

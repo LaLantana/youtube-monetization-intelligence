@@ -1,0 +1,4 @@
+connection:
+  duckdb:
+    motherduck:
+      api_key: ${vaults.environment.MOTHERDUCK_API_KEY}
