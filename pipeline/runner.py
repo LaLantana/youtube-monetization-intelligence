@@ -149,11 +149,18 @@ def main() -> int:
     ap.add_argument("--select", help="comma-separated targets (default: all components)")
     ap.add_argument("--exclude", default="", help="comma-separated components to skip entirely")
     ap.add_argument("--stub", default="", help="comma-separated components to replace with empty tables")
+    ap.add_argument(
+        "--stub-parquet",
+        default="",
+        help="name=path pairs (comma-separated): replace a component with the contents of a parquet file",
+    )
     ap.add_argument("--skip-tests", action="store_true")
     args = ap.parse_args()
 
     excluded = {s for s in args.exclude.split(",") if s}
     stubbed = {s for s in args.stub.split(",") if s}
+    parquet_stubs = dict(p.split("=", 1) for p in args.stub_parquet.split(",") if p)
+    stubbed |= set(parquet_stubs)
 
     components: dict[str, Component] = {}
     for path in sorted(COMPONENTS.iterdir()):
@@ -177,7 +184,13 @@ def main() -> int:
         fq = f'"{OUT_SCHEMA}"."{name}"'
         t0 = time.time()
         try:
-            if name in stubbed:
+            if name in parquet_stubs:
+                con.execute(
+                    f"CREATE OR REPLACE TABLE {fq} AS SELECT * FROM read_parquet(?)",
+                    [parquet_stubs[name]],
+                )
+                status = "stubbed:parquet"
+            elif name in stubbed:
                 cols = STUB_SCHEMAS[name]
                 ddl = ", ".join(f'"{c}" {t}' for c, t in cols.items())
                 con.execute(f"CREATE OR REPLACE TABLE {fq} ({ddl})")

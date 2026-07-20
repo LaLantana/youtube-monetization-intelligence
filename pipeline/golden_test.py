@@ -34,11 +34,29 @@ def values_equal(a, b, tol: float) -> bool:
     return str(a) == str(b)
 
 
+def normalize(v):
+    """Make pipeline values comparable to their JSON-export representations."""
+    if hasattr(v, "isoformat"):  # date/datetime -> the export's plain-date form
+        s = v.isoformat()
+        return s[:10] if s[10:] in ("", "T00:00:00") else s
+    return v
+
+
+def canonical_order(rows: list[dict]) -> list[dict]:
+    """The JSON exports didn't preserve the queries' ORDER BY, so compare
+    contents order-insensitively via a canonical sort."""
+    return sorted(rows, key=lambda r: json.dumps(
+        {k: normalize(r[k]) for k in sorted(r)}, default=str, sort_keys=True
+    ))
+
+
 def compare_table(con: duckdb.DuckDBPyConnection, name: str, tol: float) -> list[str]:
-    golden = json.loads((GOLDEN_DIR / f"{name}.json").read_text())
+    golden = canonical_order(json.loads((GOLDEN_DIR / f"{name}.json").read_text()))
     cur = con.execute(f'SELECT * FROM "{OUT_SCHEMA}"."{name}"')
     cols = [d[0] for d in cur.description]
-    rows = [dict(zip(cols, r)) for r in cur.fetchall()]
+    rows = canonical_order(
+        [{c: normalize(v) for c, v in zip(cols, r)} for r in cur.fetchall()]
+    )
 
     problems: list[str] = []
     if len(rows) != len(golden):
