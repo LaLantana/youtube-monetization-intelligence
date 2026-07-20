@@ -1,0 +1,4 @@
+duckdb
+ibis-framework[duckdb]
+pandas
+jinja2
