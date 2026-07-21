@@ -21,7 +21,7 @@ SELECT
     *,
     ROW_NUMBER() OVER (
         PARTITION BY snapshot_month, viral_fingerprint
-        ORDER BY avg_recency_weighted_estimated_revenue DESC, avg_estimated_revenue DESC
+        ORDER BY avg_recency_weighted_estimated_revenue DESC, avg_estimated_revenue DESC, monetization_quadrant
     ) AS viral_fingerprint_rank
 FROM base
 

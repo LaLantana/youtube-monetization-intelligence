@@ -22,7 +22,7 @@ SELECT
     *,
     ROW_NUMBER() OVER (
         PARTITION BY snapshot_month, content_length_track
-        ORDER BY avg_recency_weighted_estimated_revenue DESC, avg_view_count DESC
+        ORDER BY avg_recency_weighted_estimated_revenue DESC, avg_view_count DESC, engagement_quality_band
     ) AS content_category_rank
 FROM base
 

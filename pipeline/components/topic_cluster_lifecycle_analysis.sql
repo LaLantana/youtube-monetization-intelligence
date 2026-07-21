@@ -47,11 +47,11 @@ WITH eligible_rows AS (
         *,
         ROW_NUMBER() OVER (
             PARTITION BY snapshot_month
-            ORDER BY topic_revenue_momentum DESC, avg_recency_weighted_estimated_revenue DESC
+            ORDER BY topic_revenue_momentum DESC, avg_recency_weighted_estimated_revenue DESC, topic_cluster
         ) AS rising_topic_rank,
         ROW_NUMBER() OVER (
             PARTITION BY snapshot_month
-            ORDER BY topic_revenue_momentum ASC, avg_recency_weighted_estimated_revenue DESC
+            ORDER BY topic_revenue_momentum ASC, avg_recency_weighted_estimated_revenue DESC, topic_cluster
         ) AS declining_topic_rank
     FROM month_over_month
     WHERE topic_revenue_momentum IS NOT NULL

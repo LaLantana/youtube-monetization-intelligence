@@ -64,8 +64,34 @@ powering the live dashboard:
   runs on Ascend would have differed the same way. No logic differences
   were found; both sides contain identical group structures.
 
+## Determinism hardening (2026-07-21)
+
+The tie-breaking gap was closed — the first deliberate change to the
+original components (originals under `../projects/` remain untouched as the
+historical record). All 22 window orderings across 14 SQL components now end
+in a unique column (`country`, `channel_id`, `topic_cluster`,
+category/quadrant/track names), so ranking and first-value picks are no
+longer arbitrary among tied rows.
+
+Verified by running the full pipeline twice on the 5M-row April data and
+comparing all 49 output tables:
+
+- Every count, category, classification, and month is **identical** between
+  runs. The worst floating-point difference across all 18 dashboard tables
+  is **3.4×10⁻¹⁴** (parallel-summation noise, invisible at any displayed
+  precision). The only differing column anywhere is a "computed at" run
+  timestamp.
+- Golden test vs April: 12/18 tables still match exactly; the 6 that differ
+  do so only where April's runs made arbitrary tie picks that are now fixed
+  deterministically (metric values match; tied ranks settle differently).
+
+Note for CI: a full run materializes ~130 GB of intermediate tables
+(every component persists all columns, Ascend-style). Fine on a laptop as a
+one-off; the scheduled GitHub Actions run (14 GB disk) will need a slimmer
+materialization mode — planned for the ingestion/automation stages.
+
 Next (per the root roadmap): fresh Kaggle ingestion, YouTube enrichment at
 scale, and a scheduled GitHub Actions run feeding the live dashboard.
-Optional hardening for daily runs: add explicit tie-breakers to those
-window orderings so runs become byte-reproducible (a deliberate, documented
-change to the original components).
+Known logic observation (unchanged, on the backlog): the flash-fingerprint
+window `min_daily_movement_next_3_days` looks at the next 3 *rows*, which
+with per-country interleaving is usually the same day, not 3 days.

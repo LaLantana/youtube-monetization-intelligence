@@ -21,15 +21,15 @@ SELECT
     *,
     avg_estimated_revenue - FIRST_VALUE(avg_estimated_revenue) OVER (
         PARTITION BY snapshot_month
-        ORDER BY CASE WHEN content_length_track = 'long_form' THEN 0 ELSE 1 END
+        ORDER BY CASE WHEN content_length_track = 'long_form' THEN 0 ELSE 1 END, content_length_track
     ) AS revenue_delta_vs_long_form_baseline,
     avg_view_count - FIRST_VALUE(avg_view_count) OVER (
         PARTITION BY snapshot_month
-        ORDER BY CASE WHEN content_length_track = 'long_form' THEN 0 ELSE 1 END
+        ORDER BY CASE WHEN content_length_track = 'long_form' THEN 0 ELSE 1 END, content_length_track
     ) AS view_delta_vs_long_form_baseline,
     avg_engagement_quality_score - FIRST_VALUE(avg_engagement_quality_score) OVER (
         PARTITION BY snapshot_month
-        ORDER BY CASE WHEN content_length_track = 'long_form' THEN 0 ELSE 1 END
+        ORDER BY CASE WHEN content_length_track = 'long_form' THEN 0 ELSE 1 END, content_length_track
     ) AS engagement_delta_vs_long_form_baseline
 FROM base
 

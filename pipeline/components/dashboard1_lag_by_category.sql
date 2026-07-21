@@ -4,10 +4,10 @@ WITH category_lag AS (
         AVG(COALESCE(publish_to_trending_lag_hours, 0)) AS avg_publish_to_trending_lag_hours,
         COUNT(*) AS snapshot_count,
         ROW_NUMBER() OVER (
-            ORDER BY AVG(COALESCE(publish_to_trending_lag_hours, 0)) ASC
+            ORDER BY AVG(COALESCE(publish_to_trending_lag_hours, 0)) ASC, COALESCE(youtube_category_name, 'Uncategorized')
         ) AS fastest_rank,
         ROW_NUMBER() OVER (
-            ORDER BY AVG(COALESCE(publish_to_trending_lag_hours, 0)) DESC
+            ORDER BY AVG(COALESCE(publish_to_trending_lag_hours, 0)) DESC, COALESCE(youtube_category_name, 'Uncategorized')
         ) AS slowest_rank
     FROM {{ ref('apply_recency_weighting') }}
     GROUP BY COALESCE(youtube_category_name, 'Uncategorized')

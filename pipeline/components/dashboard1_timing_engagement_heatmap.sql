@@ -27,7 +27,7 @@ GROUP BY
     END,
     EXTRACT('hour' FROM TRY_CAST(publish_date AS TIMESTAMP))
 QUALIFY ROW_NUMBER() OVER (
-    ORDER BY avg_engagement_quality_score DESC, snapshot_count DESC
+    ORDER BY avg_engagement_quality_score DESC, snapshot_count DESC, day_of_week_number, publish_hour
 ) <= 10
 
 {{ with_test("count_greater_than", count=0) }}

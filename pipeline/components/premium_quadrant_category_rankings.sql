@@ -18,7 +18,7 @@ WITH monthly_category_metrics AS (
         *,
         ROW_NUMBER() OVER (
             PARTITION BY snapshot_month
-            ORDER BY premium_quadrant_share DESC, avg_recency_weighted_estimated_revenue DESC
+            ORDER BY premium_quadrant_share DESC, avg_recency_weighted_estimated_revenue DESC, youtube_category_name
         ) AS premium_category_rank
     FROM monthly_category_metrics
 )

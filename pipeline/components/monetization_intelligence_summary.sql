@@ -20,7 +20,7 @@ SELECT
     *,
     ROW_NUMBER() OVER (
         PARTITION BY snapshot_month, monetization_quadrant
-        ORDER BY avg_recency_weighted_estimated_revenue DESC, avg_estimated_revenue DESC
+        ORDER BY avg_recency_weighted_estimated_revenue DESC, avg_estimated_revenue DESC, youtube_category_name
     ) AS monetization_category_rank
 FROM base
 

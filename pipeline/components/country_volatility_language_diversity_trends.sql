@@ -31,15 +31,15 @@ WITH monthly_country_metrics AS (
         *,
         ROW_NUMBER() OVER (
             PARTITION BY snapshot_month
-            ORDER BY country_view_volatility DESC, country_avg_weighted_revenue DESC
+            ORDER BY country_view_volatility DESC, country_avg_weighted_revenue DESC, country_code
         ) AS most_volatile_country_rank,
         ROW_NUMBER() OVER (
             PARTITION BY snapshot_month
-            ORDER BY country_view_volatility ASC, country_avg_weighted_revenue DESC
+            ORDER BY country_view_volatility ASC, country_avg_weighted_revenue DESC, country_code
         ) AS most_stable_country_rank,
         ROW_NUMBER() OVER (
             PARTITION BY snapshot_month
-            ORDER BY language_diversity_growth DESC, language_diversity_score DESC
+            ORDER BY language_diversity_growth DESC, language_diversity_score DESC, country_code
         ) AS fastest_diversity_growth_rank
     FROM enriched
     WHERE language_diversity_growth IS NOT NULL

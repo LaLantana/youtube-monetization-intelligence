@@ -19,7 +19,7 @@ SELECT
     *,
     ROW_NUMBER() OVER (
         PARTITION BY snapshot_month
-        ORDER BY avg_estimated_revenue DESC, avg_view_count DESC
+        ORDER BY avg_estimated_revenue DESC, avg_view_count DESC, publish_to_trending_lag_bucket, content_length_track
     ) AS month_timing_rank
 FROM base
 

@@ -12,7 +12,7 @@ WITH monthly_channel_counts AS (
         channel_snapshot_count,
         ROW_NUMBER() OVER (
             PARTITION BY snapshot_month
-            ORDER BY channel_snapshot_count DESC
+            ORDER BY channel_snapshot_count DESC, channel_id
         ) AS channel_rank,
         SUM(channel_snapshot_count) OVER (PARTITION BY snapshot_month) AS total_monthly_snapshots
     FROM monthly_channel_counts

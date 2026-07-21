@@ -4,19 +4,19 @@ WITH base AS (
         CAST(snapshot_date AS DATE) AS snapshot_day,
         ROW_NUMBER() OVER (
             PARTITION BY video_id
-            ORDER BY snapshot_date
+            ORDER BY snapshot_date, country
         ) AS video_day_number,
         COUNT(DISTINCT CAST(snapshot_date AS DATE)) OVER (
             PARTITION BY video_id
         ) AS trending_tenure_days,
         FIRST_VALUE(COALESCE(daily_movement, 0)) OVER (
             PARTITION BY video_id
-            ORDER BY snapshot_date
+            ORDER BY snapshot_date, country
             ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
         ) AS entry_day_daily_movement,
         MIN(COALESCE(daily_movement, 0)) OVER (
             PARTITION BY video_id
-            ORDER BY snapshot_date
+            ORDER BY snapshot_date, country
             ROWS BETWEEN CURRENT ROW AND 3 FOLLOWING
         ) AS min_daily_movement_next_3_days
     FROM {{ ref('derive_trend_movement_features') }}

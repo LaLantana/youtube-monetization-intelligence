@@ -30,7 +30,8 @@ FROM (
                 END,
                 TRY_CAST(trending.publish_date AS TIMESTAMP) DESC,
                 TRY_CAST(trending.snapshot_date AS TIMESTAMP) DESC,
-                trending.video_id
+                trending.video_id,
+                trending.country
         ) AS video_rank,
         ROW_NUMBER() OVER (
             ORDER BY
@@ -41,7 +42,8 @@ FROM (
                 END,
                 TRY_CAST(trending.publish_date AS TIMESTAMP) DESC,
                 TRY_CAST(trending.snapshot_date AS TIMESTAMP) DESC,
-                trending.video_id
+                trending.video_id,
+                trending.country
         ) AS enrichment_priority_rank
     FROM {{ ref('read_trending_videos_from_motherduck') }} AS trending
 ) prioritized
