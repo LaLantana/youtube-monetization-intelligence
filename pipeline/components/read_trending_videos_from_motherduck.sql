@@ -13,8 +13,9 @@ SELECT
     video_tags,
     publish_date,
     country,
-    langauge,
-    description
+    langauge
+    -- description intentionally dropped (2026-07-21): no component consumes it,
+    -- and carrying it through every 5M-row intermediate dominated disk usage.
 FROM "YouTube Trending Videos".trending_videos
 
 {{ with_test("count_greater_than", count=0) }}

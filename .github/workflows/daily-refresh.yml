@@ -1,0 +1,91 @@
+name: Daily dashboard refresh
+
+on:
+  schedule:
+    # Kaggle dataset updates ~08:00 UTC daily; run with buffer.
+    - cron: "30 9 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: daily-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free runner disk (drop unused preinstalled toolchains)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pipeline dependencies
+        run: |
+          pip install -r pipeline/requirements.txt kaggle
+
+      - name: Download fresh Kaggle dataset
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: |
+          kaggle datasets download asaniczka/trending-youtube-videos-113-countries \
+            -p pipeline/raw_data --unzip
+          ls -lh pipeline/raw_data
+
+      - name: Ingest into DuckDB (then delete the CSV to free disk)
+        run: |
+          python pipeline/ingest_kaggle.py --db pipeline/warehouse/ci.duckdb
+          rm -f pipeline/raw_data/*.csv pipeline/raw_data/*.zip
+          df -h /
+
+      - name: Run pipeline (gc mode caps peak disk)
+        run: |
+          python pipeline/runner.py --db pipeline/warehouse/ci.duckdb --gc \
+            --stub-parquet read_youtube_video_enrichment=pipeline/seeds/april_enrichment.parquet \
+            --exclude inspect_youtube_videos_payload
+          df -h /
+
+      - name: Export dashboard data
+        run: |
+          python pipeline/export_dashboard_data.py \
+            --db pipeline/warehouse/ci.duckdb \
+            --out dashboard-live/src/data
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build dashboard
+        working-directory: dashboard-live
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy to Netlify (same URL)
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          npx --yes netlify-cli deploy --prod --dir dashboard-live/dist \
+            --message "Daily data refresh $(date -u +%F)"
+
+      - name: Run summary
+        run: |
+          python - <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          import duckdb
+          con = duckdb.connect("pipeline/warehouse/ci.duckdb", read_only=True)
+          k = con.execute("SELECT * FROM analytics.dashboard1_monetization_kpis").fetchdf().iloc[0]
+          n, dmax = con.execute('SELECT count(*), max(snapshot_date) FROM "YouTube Trending Videos".trending_videos').fetchone()
+          print("### Daily refresh complete\n")
+          print(f"- Raw rows: **{n:,}** (through {dmax})")
+          print(f"- Platform health index: **{k['avg_platform_health_index']}**")
+          print(f"- Avg monthly est. revenue: **${k['avg_monthly_estimated_revenue']:,.0f}**")
+          print(f"- Unique videos: **{int(k['total_unique_videos']):,}**")
+          EOF

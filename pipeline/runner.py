@@ -155,6 +155,12 @@ def main() -> int:
         help="name=path pairs (comma-separated): replace a component with the contents of a parquet file",
     )
     ap.add_argument("--skip-tests", action="store_true")
+    ap.add_argument(
+        "--gc",
+        action="store_true",
+        help="drop each intermediate table once no remaining component needs it "
+        "(dashboard tables are always kept) — caps peak disk for CI runs",
+    )
     args = ap.parse_args()
 
     excluded = {s for s in args.exclude.split(",") if s}
@@ -177,6 +183,25 @@ def main() -> int:
     icon = ibis.duckdb.connect(args.db)
     con = icon.con  # underlying duckdb connection
     con.execute(f'CREATE SCHEMA IF NOT EXISTS "{OUT_SCHEMA}"')
+
+    # For --gc: how many not-yet-run components still read each table.
+    pending_readers: dict[str, int] = {}
+    for name in order:
+        for up in components[name].inputs:
+            pending_readers[up] = pending_readers.get(up, 0) + 1
+
+    def release_inputs(name: str) -> list[str]:
+        dropped = []
+        for up in components[name].inputs:
+            pending_readers[up] -= 1
+            if (
+                pending_readers[up] == 0
+                and up in components
+                and not up.startswith(("dashboard1_", "dashboard2_"))
+            ):
+                con.execute(f'DROP TABLE IF EXISTS "{OUT_SCHEMA}"."{up}"')
+                dropped.append(up)
+        return dropped
 
     failed: list[str] = []
     for i, name in enumerate(order, 1):
@@ -232,7 +257,12 @@ def main() -> int:
                 failed.append(name)
                 test_note = "  TEST FAIL: " + "; ".join(fails)
         n = con.execute(f"SELECT count(*) FROM {fq}").fetchone()[0]
-        print(f"[{i:2}/{len(order)}] {'⚠️' if test_note else '✅'} {name} ({status}, {n} rows, {time.time()-t0:.1f}s){test_note}")
+        gc_note = ""
+        if args.gc:
+            dropped = release_inputs(name)
+            if dropped:
+                gc_note = f"  [gc: dropped {', '.join(dropped)}]"
+        print(f"[{i:2}/{len(order)}] {'⚠️' if test_note else '✅'} {name} ({status}, {n} rows, {time.time()-t0:.1f}s){test_note}{gc_note}")
 
     if failed:
         print(f"\nFAILED components: {sorted(set(failed))}")
