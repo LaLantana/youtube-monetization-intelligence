@@ -32,6 +32,7 @@ def main() -> None:
     ap.add_argument("--csv", default=str(HERE / "raw_data" / "trending_yt_videos_113_countries.csv"))
     args = ap.parse_args()
 
+    Path(args.db).parent.mkdir(parents=True, exist_ok=True)  # warehouse/ is gitignored, so CI checkouts lack it
     con = duckdb.connect(args.db)
     cols = [r[0] for r in con.execute(
         "SELECT column_name FROM (DESCRIBE SELECT * FROM read_csv_auto(?, sample_size=100000))",

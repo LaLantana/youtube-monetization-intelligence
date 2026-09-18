@@ -180,6 +180,7 @@ def main() -> int:
     targets = [s for s in args.select.split(",") if s] if args.select else list(components)
     order = topo_order(components, targets)
 
+    Path(args.db).parent.mkdir(parents=True, exist_ok=True)
     icon = ibis.duckdb.connect(args.db)
     con = icon.con  # underlying duckdb connection
     con.execute(f'CREATE SCHEMA IF NOT EXISTS "{OUT_SCHEMA}"')
