@@ -42,7 +42,7 @@ This is an honest MVP, and the dashboard says so where it matters:
 
 - **The market-analytics sections are real** — platform health, viral fingerprints, country/diversity trends, and time-series benchmarks are computed from the full dataset.
 - **The category & revenue figures are illustrative.** The YouTube Data API enrichment (which supplies each video's category and duration) was validated but not yet run at scale, so most videos fall back to an "Uncategorized" default. Short-form vs. long-form separation depends on the same enrichment and is therefore incomplete (completing it is Phase 3 — see Roadmap).
-- **The live site is a static snapshot** of the data as of ~April 2026. Making it refresh daily from Kaggle is the next phase (see Roadmap).
+- **The live site refreshes itself daily.** A scheduled [GitHub Actions job](.github/workflows/daily-refresh.yml) downloads the latest Kaggle data each morning, re-runs the full pipeline, and republishes the dashboard automatically.
 
 ## How it was built — and revived
 
@@ -73,8 +73,8 @@ Everything else under `projects/` (`minimal`, `default/*` other than `fabric`, `
 
 ## Roadmap
 
-- **Phase 1 — Live showcase ✅** (this — dashboard back online as a static snapshot).
-- **Phase 2 — Daily & accurate (Dashboard 1)** — port the pipeline off Ascend, plug directly into the Kaggle source with an automated daily refresh, and run the YouTube enrichment at scale so the category and revenue numbers become fully real.
+- **Phase 1 — Live showcase ✅** (dashboard back online as a static snapshot, July 2026).
+- **Phase 2 — Daily & self-updating ✅** (September 2026) — pipeline ported off Ascend onto DuckDB (verified against the original outputs, then hardened for run-to-run determinism), plugged directly into the Kaggle source, and automated end-to-end: a daily GitHub Actions run refreshes the live site with no manual steps. **Still open from Phase 2:** the YouTube enrichment at scale, which turns the category and revenue placeholders into real numbers.
 - **Phase 3 — Short vs. long form (Dashboard 2)** — finish the second dashboard once Phase 2's enrichment supplies video durations (the data it depends on).
 - **Later (unscheduled)** — search-interest signals (Google Trends). The original integration was a validated stub that no chart ever consumed, so it was dropped from Phase 2; if a search-interest chart is designed in future, this would be rebuilt on a sturdier source than the unofficial `pytrends` scraper.
 
