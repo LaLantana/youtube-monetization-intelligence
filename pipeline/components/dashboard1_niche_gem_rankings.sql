@@ -11,7 +11,10 @@ SELECT
 FROM {{ ref('niche_gem_category_rankings') }} AS rankings
 LEFT JOIN {{ ref('monetization_intelligence_summary') }} AS summary
     ON rankings.snapshot_month = summary.snapshot_month
-   AND rankings.youtube_category_name = summary.youtube_category_name
+   -- The rankings side labels unenriched videos 'Uncategorized' while the summary
+   -- side keeps a true NULL, so a plain equality silently dropped every
+   -- Uncategorized row. Normalize both sides before comparing.
+   AND rankings.youtube_category_name = COALESCE(summary.youtube_category_name, 'Uncategorized')
    AND summary.monetization_quadrant = 'niche_gem'
 
 {{ with_test("count_greater_than", count=0) }}

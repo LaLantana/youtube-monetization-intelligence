@@ -53,7 +53,15 @@ async function runQuery(sql: string): Promise<{ rows: Record<string, unknown>[] 
   if (order.length) {
     rows.sort((ra, rb) => {
       for (const { col, dir } of order) {
-        const r = compare(ra[col], rb[col]);
+        const a = ra[col];
+        const b = rb[col];
+        // Nulls always sort last, regardless of direction — otherwise a DESC
+        // sort surfaces null-keyed rows as the "latest" ones.
+        if (a == null || b == null) {
+          if (a == null && b == null) continue;
+          return a == null ? 1 : -1;
+        }
+        const r = compare(a, b);
         if (r !== 0) return dir === 'desc' ? -r : r;
       }
       return 0;
