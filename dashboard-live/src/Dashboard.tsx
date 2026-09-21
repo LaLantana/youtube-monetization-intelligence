@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import enrichmentProgress from './data/enrichment_progress.json';
 import {
   ResponsiveContainer,
   AreaChart,
@@ -817,13 +818,14 @@ export default function App() {
           <div className="mb-6 rounded-2xl border border-sky-500/30 bg-sky-500/10 p-5">
             <h3 className="text-base font-semibold text-sky-200">Category Enrichment In Progress</h3>
             <p className="mt-3 text-sm leading-6 text-slate-200">
-              YouTube Data API category data is being enriched incrementally due to API quota limits of 10,000 units per day.
-              The charts below show current data — all videos are temporarily classified as Uncategorized with a default RPM of
-              $3.50 pending enrichment. Revenue estimates by category will become precise over subsequent pipeline runs. Once
-              enrichment completes, this section will show top 10 categories by estimated revenue, Premium quadrant share
-              rankings, and Niche Gem share rankings.
+              YouTube Data API category data is enriched incrementally within the free API quota (10,000 units per day),
+              newest videos first. Videos not yet enriched appear as Uncategorized with a default RPM, so category revenue
+              precision improves with every daily run.
             </p>
-            <p className="mt-3 text-sm font-medium text-sky-100">Current enrichment progress: 1 of 5,013,692 videos enriched</p>
+            <p className="mt-3 text-sm font-medium text-sky-100">
+              Current enrichment progress: {enrichmentProgress.enriched.toLocaleString()} of{' '}
+              {enrichmentProgress.total_videos.toLocaleString()} videos enriched.
+            </p>
           </div>
           <div className="grid gap-6 xl:grid-cols-[1.35fr_1fr]">
             <div className="h-[460px] w-full rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
@@ -1096,9 +1098,10 @@ export default function App() {
           <div className="mb-6 rounded-2xl border border-sky-500/30 bg-sky-500/10 p-5">
             <h3 className="text-base font-semibold text-sky-200">Category Enrichment In Progress</h3>
             <p className="mt-3 text-sm leading-6 text-slate-200">
-              Topic clusters and category rankings will become more precise as YouTube Data API enrichment completes. Currently
-              showing default Uncategorized classification for category fields. Current enrichment progress: 1 of 5,013,692
-              videos enriched.
+              Topic clusters and category rankings will become more precise as YouTube Data API enrichment completes. Videos
+              not yet enriched show as Uncategorized. Current enrichment progress:{' '}
+              {enrichmentProgress.enriched.toLocaleString()} of {enrichmentProgress.total_videos.toLocaleString()} videos
+              enriched.
             </p>
           </div>
           <div className="grid gap-6 xl:grid-cols-3">

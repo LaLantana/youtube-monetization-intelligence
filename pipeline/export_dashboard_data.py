@@ -38,6 +38,28 @@ def main() -> None:
         print(f"exported {t}")
     print(f"18 tables -> {out}")
 
+    # Enrichment-progress banner data. Best-effort: local runs without the
+    # store or raw table keep the committed default file.
+    try:
+        import datetime
+        import json
+
+        import pandas as pd
+
+        store = pd.read_parquet(HERE / "raw_data" / "enrichment_store.parquet")
+        total = con.execute(
+            'SELECT count(DISTINCT video_id) FROM "YouTube Trending Videos".trending_videos'
+        ).fetchone()[0]
+        progress = {
+            "enriched": int((store["status"] == "processed").sum()),
+            "total_videos": int(total),
+            "updated": datetime.date.today().isoformat(),
+        }
+        (out / "enrichment_progress.json").write_text(json.dumps(progress))
+        print(f"enrichment progress: {progress['enriched']:,} / {progress['total_videos']:,}")
+    except Exception as e:
+        print(f"enrichment progress skipped ({e})")
+
 
 if __name__ == "__main__":
     main()
