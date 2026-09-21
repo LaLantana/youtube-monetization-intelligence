@@ -4,11 +4,19 @@ on:
   schedule:
     # Kaggle dataset updates ~08:00 UTC daily; run with buffer.
     - cron: "30 9 * * *"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      request_budget:
+        description: "YouTube API requests this run (x50 videos each; free quota ~9500/day)"
+        required: false
+        default: "6000"
 
 concurrency:
   group: daily-refresh
   cancel-in-progress: false
+
+permissions:
+  contents: write # to persist the enrichment store as a release asset
 
 jobs:
   refresh:
@@ -45,10 +53,37 @@ jobs:
           rm -f pipeline/raw_data/*.csv pipeline/raw_data/*.zip
           df -h /
 
+      - name: Restore enrichment store (accumulated across runs)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download enrichment-store -p enrichment_store.parquet \
+            -D pipeline/raw_data --clobber \
+            || cp pipeline/seeds/april_enrichment.parquet pipeline/raw_data/enrichment_store.parquet
+          ls -lh pipeline/raw_data/enrichment_store.parquet
+
+      - name: Enrich next slice via YouTube API
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          YT_MAX_REQUESTS_PER_RUN: ${{ inputs.request_budget || '6000' }}
+        run: |
+          python pipeline/runner.py --db pipeline/warehouse/ci.duckdb \
+            --select youtube_enrichment_candidates --skip-tests
+          python pipeline/enrich_step.py \
+            --db pipeline/warehouse/ci.duckdb \
+            --store pipeline/raw_data/enrichment_store.parquet
+
+      - name: Persist enrichment store
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload enrichment-store \
+            pipeline/raw_data/enrichment_store.parquet --clobber
+
       - name: Run pipeline (gc mode caps peak disk)
         run: |
           python pipeline/runner.py --db pipeline/warehouse/ci.duckdb --gc \
-            --stub-parquet read_youtube_video_enrichment=pipeline/seeds/april_enrichment.parquet \
+            --stub-parquet read_youtube_video_enrichment=pipeline/raw_data/enrichment_store.parquet \
             --exclude inspect_youtube_videos_payload
           df -h /
 
@@ -83,8 +118,12 @@ jobs:
           con = duckdb.connect("pipeline/warehouse/ci.duckdb", read_only=True)
           k = con.execute("SELECT * FROM analytics.dashboard1_monetization_kpis").fetchdf().iloc[0]
           n, dmax = con.execute('SELECT count(*), max(snapshot_date) FROM "YouTube Trending Videos".trending_videos').fetchone()
+          import pandas as pd
+          store = pd.read_parquet("pipeline/raw_data/enrichment_store.parquet")
+          enriched = (store["status"] == "processed").sum()
           print("### Daily refresh complete\n")
           print(f"- Raw rows: **{n:,}** (through {dmax})")
+          print(f"- Enrichment store: **{enriched:,}** videos enriched")
           print(f"- Platform health index: **{k['avg_platform_health_index']}**")
           print(f"- Avg monthly est. revenue: **${k['avg_monthly_estimated_revenue']:,.0f}**")
           print(f"- Unique videos: **{int(k['total_unique_videos']):,}**")

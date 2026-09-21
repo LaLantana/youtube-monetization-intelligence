@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import time
 from typing import Any
@@ -18,7 +19,9 @@ PARTS = "contentDetails,snippet,statistics"
 MAX_BATCH_SIZE = 50
 DAILY_QUOTA_LIMIT = 9_500
 REQUEST_UNIT_COST = 1
-MAX_REQUESTS_PER_RUN = 20
+# The hackathon validated with 20 requests/run; the daily CI job overrides this
+# via env to use the real free quota (each request enriches up to 50 videos).
+MAX_REQUESTS_PER_RUN = int(os.environ.get("YT_MAX_REQUESTS_PER_RUN", "20"))
 CATEGORY_LOOKUP = {
     "1": "Film & Animation",
     "2": "Autos & Vehicles",
