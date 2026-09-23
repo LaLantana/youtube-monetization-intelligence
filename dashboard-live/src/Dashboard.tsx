@@ -709,7 +709,7 @@ export default function App() {
         </SectionCard>
 
         <SectionCard
-          title="Section 2 — Platform Health Trajectory"
+          title="Section 2 — Content Performance Health Score"
           subtitle={(
             <>
               <span className="block text-sm text-slate-400">

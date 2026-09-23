@@ -75,7 +75,7 @@ Everything else under `projects/` (`minimal`, `default/*` other than `fabric`, `
 
 - **Phase 1 — Live showcase ✅** (dashboard back online as a static snapshot, July 2026).
 - **Phase 2 — Daily & self-updating ✅** (September 2026) — pipeline ported off Ascend onto DuckDB (verified against the original outputs, then hardened for run-to-run determinism), plugged directly into the Kaggle source, and automated end-to-end: a daily GitHub Actions run refreshes the live site with no manual steps. The YouTube enrichment then ran at scale (September 2026): ~610K of ~645K videos enriched in three days of automated runs, with daily incremental enrichment thereafter — categories and revenue figures are now real, and the engagement-quality formula was corrected to the original spec (comment multiplier 2 → 5).
-- **Phase 3 — Short vs. long form (Dashboard 2)** — finish the second dashboard once Phase 2's enrichment supplies video durations (the data it depends on).
+- **Phase 3 — Short vs. long form (Dashboard 2) ✅** (September 2026) — the second dashboard, finished from the hackathon draft once enrichment supplied video durations: revenue and premium-share trends per format plus a latest-month comparison, behind a tab switch on the same live site, fed by the same daily run.
 - **Later (unscheduled)** — search-interest signals (Google Trends). The original integration was a validated stub that no chart ever consumed, so it was dropped from Phase 2; if a search-interest chart is designed in future, this would be rebuilt on a sturdier source than the unofficial `pytrends` scraper.
 
 ## Tech

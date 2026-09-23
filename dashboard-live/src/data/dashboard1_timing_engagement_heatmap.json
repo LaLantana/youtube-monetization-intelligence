@@ -1,12 +1,12 @@
 [
-	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":17,"avg_engagement_quality_score":0.06809587051085134,"snapshot_count":288},
-	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":20,"avg_engagement_quality_score":0.05812868856145481,"snapshot_count":235},
-	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":19,"avg_engagement_quality_score":0.05564403710851696,"snapshot_count":316},
-	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":8,"avg_engagement_quality_score":0.05512919760814251,"snapshot_count":160},
-	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":18,"avg_engagement_quality_score":0.05370922838792035,"snapshot_count":313},
-	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":16,"avg_engagement_quality_score":0.05233398581204333,"snapshot_count":453},
-	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":11,"avg_engagement_quality_score":0.051679996148907066,"snapshot_count":232},
-	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":14,"avg_engagement_quality_score":0.05148328333781547,"snapshot_count":323},
-	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":1,"avg_engagement_quality_score":0.05104237565098872,"snapshot_count":88},
-	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":12,"avg_engagement_quality_score":0.05026706109168437,"snapshot_count":322}
+	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":17,"avg_engagement_quality_score":0.07846635106823524,"snapshot_count":288},
+	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":19,"avg_engagement_quality_score":0.070023436956226,"snapshot_count":316},
+	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":20,"avg_engagement_quality_score":0.06842514524493162,"snapshot_count":235},
+	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":8,"avg_engagement_quality_score":0.06584463176489977,"snapshot_count":160},
+	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":18,"avg_engagement_quality_score":0.06258684952421742,"snapshot_count":313},
+	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":16,"avg_engagement_quality_score":0.06076637881462591,"snapshot_count":453},
+	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":1,"avg_engagement_quality_score":0.05925704023017024,"snapshot_count":88},
+	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":11,"avg_engagement_quality_score":0.05714439338599216,"snapshot_count":232},
+	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":14,"avg_engagement_quality_score":0.0569747908130963,"snapshot_count":323},
+	{"day_of_week_number":"4","day_of_week_name":"Thursday","publish_hour":5,"avg_engagement_quality_score":0.055892988957816095,"snapshot_count":88}
 ]

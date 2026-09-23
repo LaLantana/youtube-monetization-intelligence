@@ -50,8 +50,16 @@ def main() -> None:
         total = con.execute(
             'SELECT count(DISTINCT video_id) FROM "YouTube Trending Videos".trending_videos'
         ).fetchone()[0]
+        # Count only enriched videos present in the CURRENT dataset — the store
+        # can cover a newer catalog than a local run's older raw data.
+        processed_ids = store.loc[store["status"] == "processed", "video_id"].astype(str)
+        enriched = con.execute(
+            'SELECT count(DISTINCT video_id) FROM "YouTube Trending Videos".trending_videos '
+            "WHERE video_id IN (SELECT unnest(?))",
+            [processed_ids.tolist()],
+        ).fetchone()[0]
         progress = {
-            "enriched": int((store["status"] == "processed").sum()),
+            "enriched": int(enriched),
             "total_videos": int(total),
             "updated": datetime.date.today().isoformat(),
         }
