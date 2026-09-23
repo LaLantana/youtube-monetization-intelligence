@@ -90,8 +90,16 @@ Note for CI: a full run materializes ~130 GB of intermediate tables
 one-off; the scheduled GitHub Actions run (14 GB disk) will need a slimmer
 materialization mode — planned for the ingestion/automation stages.
 
-Next (per the root roadmap): fresh Kaggle ingestion, YouTube enrichment at
-scale, and a scheduled GitHub Actions run feeding the live dashboard.
+All of the above then shipped (September 2026): `ingest_kaggle.py` pulls the
+fresh dataset daily, `enrich_step.py` runs incremental YouTube enrichment
+against a store persisted as the `enrichment-store` GitHub release asset
+(~610K of ~645K videos enriched; the rest are deleted/private), and the
+`daily-refresh` workflow feeds the live dashboard end-to-end. Deliberate
+component changes since the port, each documented in place: window
+tie-breakers (determinism), the niche-gem join fix, the dropped unused
+`description` column, an env-overridable enrichment budget, and the
+engagement-quality comment multiplier corrected to the spec'd 5.
+
 Known logic observation (unchanged, on the backlog): the flash-fingerprint
 window `min_daily_movement_next_3_days` looks at the next 3 *rows*, which
 with per-country interleaving is usually the same day, not 3 days.

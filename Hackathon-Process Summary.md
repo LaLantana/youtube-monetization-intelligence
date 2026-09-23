@@ -831,3 +831,12 @@ Verified against the code and the live-rendered charts:
 - **Phase 3 (decided 2026-07-08):** the short vs. long form work — Dashboard 2 completion and short-form separation — is deliberately deferred to its own phase, to run after Phase 2's enrichment supplies the video durations it depends on.
 - **Optional:** rename the Section 2 heading "Platform Health Trajectory" → "Content Performance Health Score".
 
+### Phase 2 completion note — 2026-09-23
+
+The two big "fixed at the root by the Phase 2 rebuild" items above are now done:
+the YouTube enrichment ran at scale (~610K of ~645K unique videos enriched over
+three automated daily runs; the remainder are deleted/private videos), and the
+engagement-quality comment multiplier was corrected from 2 to the spec'd 5.
+Still open from this list: the unbuilt insight families (hashtag density, title
+sentiment, seasonality) and the optional Section 2 rename. Short-form/Dashboard 2
+work proceeds as Phase 3.

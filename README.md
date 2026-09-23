@@ -41,7 +41,7 @@ The dashboard presents these across eight scrolling sections, from an executive 
 This is an honest MVP, and the dashboard says so where it matters:
 
 - **The market-analytics sections are real** — platform health, viral fingerprints, country/diversity trends, and time-series benchmarks are computed from the full dataset.
-- **The category & revenue figures are illustrative.** The YouTube Data API enrichment (which supplies each video's category and duration) was validated but not yet run at scale, so most videos fall back to an "Uncategorized" default. Short-form vs. long-form separation depends on the same enrichment and is therefore incomplete (completing it is Phase 3 — see Roadmap).
+- **The category & revenue figures are real.** The YouTube Data API enrichment (which supplies each video's category and duration) ran at scale in September 2026 and now covers ~95% of the catalog — the remainder are videos since deleted or made private, which no one can enrich. New videos are enriched automatically each day. Only the short-form vs. long-form *presentation* (Dashboard 2) remains to be built — see Roadmap, Phase 3.
 - **The live site refreshes itself daily.** A scheduled [GitHub Actions job](.github/workflows/daily-refresh.yml) downloads the latest Kaggle data each morning, re-runs the full pipeline, and republishes the dashboard automatically.
 
 ## How it was built — and revived
@@ -74,7 +74,7 @@ Everything else under `projects/` (`minimal`, `default/*` other than `fabric`, `
 ## Roadmap
 
 - **Phase 1 — Live showcase ✅** (dashboard back online as a static snapshot, July 2026).
-- **Phase 2 — Daily & self-updating ✅** (September 2026) — pipeline ported off Ascend onto DuckDB (verified against the original outputs, then hardened for run-to-run determinism), plugged directly into the Kaggle source, and automated end-to-end: a daily GitHub Actions run refreshes the live site with no manual steps. **Still open from Phase 2:** the YouTube enrichment at scale, which turns the category and revenue placeholders into real numbers.
+- **Phase 2 — Daily & self-updating ✅** (September 2026) — pipeline ported off Ascend onto DuckDB (verified against the original outputs, then hardened for run-to-run determinism), plugged directly into the Kaggle source, and automated end-to-end: a daily GitHub Actions run refreshes the live site with no manual steps. The YouTube enrichment then ran at scale (September 2026): ~610K of ~645K videos enriched in three days of automated runs, with daily incremental enrichment thereafter — categories and revenue figures are now real, and the engagement-quality formula was corrected to the original spec (comment multiplier 2 → 5).
 - **Phase 3 — Short vs. long form (Dashboard 2)** — finish the second dashboard once Phase 2's enrichment supplies video durations (the data it depends on).
 - **Later (unscheduled)** — search-interest signals (Google Trends). The original integration was a validated stub that no chart ever consumed, so it was dropped from Phase 2; if a search-interest chart is designed in future, this would be rebuilt on a sturdier source than the unofficial `pytrends` scraper.
 

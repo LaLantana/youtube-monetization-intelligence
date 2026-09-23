@@ -24,7 +24,10 @@ def score_engagement_quality(
     safe_comment_count = data.comment_count.fill_null(0)
 
     engagement_score = (
-        (safe_like_count * 1.0) + (safe_comment_count * 2.0)
+        # Comment multiplier per the original spec: 5 (reflecting algorithmic
+        # amplification value). The hackathon build shipped with 2 by mistake;
+        # corrected 2026-09-23 as the documented post-hackathon fix.
+        (safe_like_count * 1.0) + (safe_comment_count * 5.0)
     ) / safe_view_count.nullif(0)
 
     return data.mutate(
