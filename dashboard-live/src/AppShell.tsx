@@ -5,8 +5,8 @@ import Dashboard from './Dashboard';
 import Dashboard2 from './Dashboard2';
 
 const TABS = [
-  { id: 'dash1', label: 'Monetization Intelligence' },
-  { id: 'dash2', label: 'Short vs Long Form' },
+  { id: 'dash1', label: 'Dashboard 1: Monetization Intelligence' },
+  { id: 'dash2', label: 'Dashboard 2: Short vs Long Form' },
 ];
 
 export default function AppShell() {
@@ -16,9 +16,6 @@ export default function AppShell() {
     <div className="min-h-screen bg-slate-950">
       <nav className="border-b border-slate-800 bg-slate-950">
         <div className="mx-auto flex max-w-7xl items-center gap-2 px-6 py-3">
-          <span className="mr-3 text-sm font-semibold tracking-tight text-slate-400">
-            YouTube Trending Intelligence
-          </span>
           {TABS.map((tab) => (
             <button
               key={tab.id}

@@ -43,8 +43,17 @@ jobs:
           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
           KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
         run: |
-          kaggle datasets download asaniczka/trending-youtube-videos-113-countries \
-            -p pipeline/raw_data --unzip
+          # Kaggle's API occasionally 404s transiently (e.g. mid-update);
+          # retry up to 3 times, 10 minutes apart, before giving up the day.
+          for attempt in 1 2 3; do
+            if kaggle datasets download asaniczka/trending-youtube-videos-113-countries \
+              -p pipeline/raw_data --unzip; then
+              break
+            fi
+            if [ "$attempt" = "3" ]; then echo "download failed after 3 attempts"; exit 1; fi
+            echo "download attempt $attempt failed; retrying in 10 minutes"
+            sleep 600
+          done
           ls -lh pipeline/raw_data
 
       - name: Ingest into DuckDB (then delete the CSV to free disk)
