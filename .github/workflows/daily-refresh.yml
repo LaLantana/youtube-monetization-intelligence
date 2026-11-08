@@ -34,9 +34,9 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install pipeline dependencies
+      - name: Install pipeline dependencies (pinned — see requirements.txt)
         run: |
-          pip install -r pipeline/requirements.txt kaggle
+          pip install -r pipeline/requirements.txt
 
       - name: Download fresh Kaggle dataset
         env:
