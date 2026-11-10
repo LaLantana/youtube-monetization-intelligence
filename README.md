@@ -76,7 +76,13 @@ Everything else under `projects/` (`minimal`, `default/*` other than `fabric`, `
 - **Phase 1 — Live showcase ✅** (dashboard back online as a static snapshot, July 2026).
 - **Phase 2 — Daily & self-updating ✅** (September 2026) — pipeline ported off Ascend onto DuckDB (verified against the original outputs, then hardened for run-to-run determinism), plugged directly into the Kaggle source, and automated end-to-end: a daily GitHub Actions run refreshes the live site with no manual steps. The YouTube enrichment then ran at scale (September 2026): ~610K of ~645K videos enriched in three days of automated runs, with daily incremental enrichment thereafter — categories and revenue figures are now real, and the engagement-quality formula was corrected to the original spec (comment multiplier 2 → 5).
 - **Phase 3 — Short vs. long form (Dashboard 2) ✅** (September 2026) — the second dashboard, finished from the hackathon draft once enrichment supplied video durations: revenue and premium-share trends per format plus a latest-month comparison, behind a tab switch on the same live site, fed by the same daily run.
-- **Later (unscheduled)** — search-interest signals (Google Trends). The original integration was a validated stub that no chart ever consumed, so it was dropped from Phase 2; if a search-interest chart is designed in future, this would be rebuilt on a sturdier source than the unofficial `pytrends` scraper.
+- **Phase 4 — Search-interest signals (planned)** — fulfill the original design's third data source: enrich the topic analysis with what the world is *searching*, not just what is trending on YouTube (e.g. flag topics whose Google search interest is rising before their YouTube supply catches up). The hackathon's `pytrends` integration was a validated stub that no chart ever consumed and was dropped during the platform migration; this phase rebuilds the input on a sturdier source — first candidate: Google's official Trends API (announced in alpha, access by request) rather than unofficial scrapers — and designs the chart(s) that consume it.
+
+### Backlog (unscheduled)
+
+- Insight families from the original plan, never built: **hashtag density**, **title sentiment**, **seasonality** — all computable from the existing dataset.
+- **Flash-fingerprint window fix** — `min_daily_movement_next_3_days` counts the next 3 *rows* (usually same-day country rows), not 3 days; a deliberate correction pending, with before/after comparison.
+- **Format labels on Dashboard 1** — only Section 2 and the topic clusters are long-form-only by design; the remaining sections blend both formats since enrichment landed, and should say so (or gain a format filter).
 
 ## Tech
 
