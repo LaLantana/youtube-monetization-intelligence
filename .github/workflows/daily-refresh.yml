@@ -45,13 +45,16 @@ jobs:
         run: |
           # Kaggle's API occasionally 404s transiently (e.g. mid-update);
           # retry up to 3 times, 10 minutes apart, before giving up the day.
+          # A download can also "succeed" while delivering nothing (seen
+          # 2026-11-10 when the upstream published an empty dataset version),
+          # so verify a plausibly-sized CSV actually arrived.
           for attempt in 1 2 3; do
-            if kaggle datasets download asaniczka/trending-youtube-videos-113-countries \
-              -p pipeline/raw_data --unzip; then
-              break
-            fi
-            if [ "$attempt" = "3" ]; then echo "download failed after 3 attempts"; exit 1; fi
-            echo "download attempt $attempt failed; retrying in 10 minutes"
+            kaggle datasets download asaniczka/trending-youtube-videos-113-countries \
+              -p pipeline/raw_data --unzip || true
+            CSV=$(find pipeline/raw_data -name "*.csv" -size +1G | head -1)
+            if [ -n "$CSV" ]; then echo "got $CSV"; break; fi
+            if [ "$attempt" = "3" ]; then echo "no usable CSV after 3 attempts"; exit 1; fi
+            echo "download attempt $attempt produced no usable CSV; retrying in 10 minutes"
             sleep 600
           done
           ls -lh pipeline/raw_data

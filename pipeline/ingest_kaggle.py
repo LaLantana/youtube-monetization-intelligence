@@ -55,6 +55,11 @@ def main() -> None:
         f'SELECT count(*), min(snapshot_date), max(snapshot_date) FROM "{RAW_SCHEMA}".trending_videos'
     ).fetchone()
     print(f"loaded {n:,} rows | snapshot range {dmin} → {dmax}")
+    # Sanity gate: the dataset holds 6M+ rows and only ever grows. A tiny
+    # result means the upstream published a broken version (seen 2026-11-10:
+    # a 22-byte dataset update) — refuse it rather than deploy a gutted dashboard.
+    if n < 5_000_000:
+        raise SystemExit(f"sanity check failed: only {n:,} rows — refusing broken upstream data")
 
 
 if __name__ == "__main__":

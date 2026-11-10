@@ -5,5 +5,7 @@ duckdb==1.5.4
 ibis-framework[duckdb]==12.0.0
 pandas==3.0.3
 jinja2==3.1.6
-kaggle==2.2.3
+# kaggle 2.2.3's endpoints were retired server-side ~2026-11-08; 2.2.5 targets
+# the current API (verified locally 2026-11-10).
+kaggle==2.2.5
 six==1.17.0
