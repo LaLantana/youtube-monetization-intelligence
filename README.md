@@ -83,6 +83,7 @@ Everything else under `projects/` (`minimal`, `default/*` other than `fabric`, `
 - Insight families from the original plan, never built: **hashtag density**, **title sentiment**, **seasonality** — all computable from the existing dataset.
 - **Flash-fingerprint window fix** — `min_daily_movement_next_3_days` counts the next 3 *rows* (usually same-day country rows), not 3 days; a deliberate correction pending, with before/after comparison.
 - **Format labels on Dashboard 1** — only Section 2 and the topic clusters are long-form-only by design; the remaining sections blend both formats since enrichment landed, and should say so (or gain a format filter).
+- **Site analytics** — add visitor measurement to the live dashboard (traffic, referrers, which dashboard/tabs get used). Prerequisite evidence for any monetization decision; preference for a free, privacy-friendly, cookieless option (no consent banner needed) over heavyweight trackers.
 
 ## Tech
 
